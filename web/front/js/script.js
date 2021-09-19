@@ -10,10 +10,13 @@ $(window).ready(function () {
         width: "220px",
         height: "60px"
     }).css('background-color', 'red').text('salam alekum').css('background-image', 'url(../)');
-    // $.get('https://google.com', function(data) {
-    //     console.log(data);
-    // });
+
     $('#app').click(function(){
-        location.href = "https://google.com";
+        data = {
+            'text': $('#text1').val()
+        }
+        $.post("http://localhost:8080/api/get_score/", data, function(data, status) {
+            $('#text2').val(data.score + '%');
+        }, "json");
     });
 });

@@ -1,27 +1,38 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression
+
 import pickle
+import numpy as np
+import os
+
+AI_PATH = os.path.join(os.getcwd(), '..\\model\\')
 
 
 app = Flask(__name__)
 
 @app.route('/api/get_score/', methods=['POST'])
 def get_score():
-	text = request.json.get('text')
-	if not text:
-		return {'error': 'No text provided.'}
+    text = request.form.get('text')
 
+    vect = pickle.load(open(os.path.join(AI_PATH, 'tfidf.pickle'), 'rb'))
+    loaded_model = pickle.load(open(os.path.join(AI_PATH, 'finalized_model.sav'), 'rb'))
 
-	vectorizer = TfidfVectorizer()
-	X_1 = vectorizer.fit_transform(data)
-	X_train = X_1[:split]
-	X_test = X_1[split:]
-	Y_test = inv_data(Y_test)
-	a = vectorizer.transform([data[0]])
-	model = pickle.load(open('../model/finalized_model.sav', 'rb'))
-	score = model.predict(a)
+    text = vect.transform([text])
+    prediction = loaded_model.predict_proba(text)
 
-	return {'score': score}
+    score = round(prediction[0][1] * 10000) / 100
+
+    if score > 50:
+        score = (score + 100) / 2
+    else:
+        score = score / 2
+
+    response = jsonify(score=score)
+    response.headers.add("Access-Control-Allow-Origin", "*")    
+
+    return response
+
 
 app.run(host='localhost', port=8080, debug=True)

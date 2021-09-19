@@ -7,7 +7,7 @@ import pickle
 import numpy as np
 import os
 
-AI_PATH = os.path.join(os.getcwd(), '../model/')
+AI_PATH = os.path.join(os.getcwd(), 'model/')
 
 
 app = Flask(__name__)

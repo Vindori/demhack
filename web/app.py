@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression
@@ -39,8 +39,8 @@ def send_js(path):
     return send_from_directory('front/js', path)
 
 @app.route('/style.css')
-def send_js(path):
-    return send_from_directory('front/', path)
+def send_css():
+    return send_from_directory('front/', 'style.css')
 
 @app.route('/')
 def index():

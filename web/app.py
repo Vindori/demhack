@@ -7,7 +7,7 @@ import pickle
 import numpy as np
 import os
 
-AI_PATH = os.path.join(os.getcwd(), '..\\model\\')
+AI_PATH = os.path.join(os.getcwd(), '../model/')
 
 
 app = Flask(__name__)
@@ -32,7 +32,18 @@ def get_score():
     response = jsonify(score=score)
     response.headers.add("Access-Control-Allow-Origin", "*")    
 
-    return response
+    return response\
 
+@app.route('/js/<path:path>')
+def send_js(path):
+    return send_from_directory('front/js', path)
+
+@app.route('/style.css')
+def send_js(path):
+    return send_from_directory('front/', path)
+
+@app.route('/')
+def index():
+    return send_from_directory('front/', 'index.html')
 
 app.run(host='localhost', port=8080, debug=True)
